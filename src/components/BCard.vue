@@ -39,7 +39,13 @@ const handlePostClick = () => {
     @click="handlePostClick"
   >
     <h1 class="text-2xl font-bold text-white mb-2">{{ props.post.title }}</h1>
-    <p class="text-gray-100 mb-4">{{ props.post.description }}</p>
+    <p class="text-gray-100 mb-4">
+      {{
+        props.post.description.length > 100
+          ? props.post.description.substring(0, 100) + '...'
+          : props.post.description
+      }}
+    </p>
     <div class="flex justify-between items-center mt-auto">
       <p class="text-sm text-gray-100">{{ formatDate(props.post.created_at || new Date()) }}</p>
       <p v-if="!props.post.published" class="text-sm px-2 py-1 rounded-full bg-white text-pink-500">
