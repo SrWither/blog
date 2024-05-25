@@ -22,7 +22,8 @@ const post = reactive({
   content: '',
   published: false,
   updated_at: new Date(),
-  user: ''
+  user: '',
+  tags: []
 })
 
 onBeforeMount(async () => {
@@ -55,7 +56,7 @@ const canEditPost = computed(() => {
 </script>
 
 <template>
-  <div class="bg-gray-100 p-4 sm:p-6 dark:bg-zinc-900 dark:text-white min-h-screen">
+  <div class="bg-gray-100 p-4 sm:p-6 dark:bg-zinc-900 dark:text-white min-h-screen transition-all">
     <BSimpleCard class="py-4 sm:py-6 shadow-lg relative mx-auto">
       <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-center">{{ post.title }}</h1>
 
@@ -65,7 +66,17 @@ const canEditPost = computed(() => {
         </router-link>
       </div>
 
-      <p class="mb-4 text-center text-zinc-500">{{ formatDate(post.updated_at) }}</p>
+      <p class="mb-2 text-center text-zinc-500">{{ formatDate(post.updated_at) }}</p>
+
+      <div class="flex justify-center mb-4 flex-wrap gap-2">
+        <span
+          v-for="tag in post.tags"
+          :key="tag"
+          class="px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 dark:from-purple-700 dark:to-pink-700 text-white rounded-lg text-sm"
+        >
+          {{ tag }}
+        </span>
+      </div>
 
       <div class="px-2 sm:px-4 md:px-10 lg:px-20 text-lg">
         <div v-if="!post.published" class="text-red-600 font-semibold text-center mb-4">
