@@ -251,4 +251,30 @@ watch(
   color: #ddd;
   border-left-color: #999;
 }
+
+#post-content details {
+  margin-bottom: 1.6em;
+}
+
+#post-content summary {
+  cursor: pointer;
+  outline: none;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
+
+#post-content details[open] summary {
+  color: #0366d6;
+}
+
+.dark #post-content summary {
+  color: #6cb6ff;
+}
+
+.dark #post-content details[open] summary {
+  color: #9ac0ff;
+}
+
+/* #post-content details[open] {
+} */
 </style>
