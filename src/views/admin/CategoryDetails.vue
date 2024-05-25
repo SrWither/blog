@@ -16,8 +16,8 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div class="max-w-md mx-auto mt-8 dark:bg-zinc-900">
-    <BSimpleCard class="relative">
+  <div class="max-w-md mx-auto mt-4 p-4 dark:bg-zinc-900">
+    <BSimpleCard class="relative p-4">
       <div class="absolute right-6">
         <button @click="router.back()">
           <i class="pi pi-arrow-left"></i>
@@ -25,11 +25,13 @@ onBeforeMount(async () => {
       </div>
       <div v-if="category" class="flex flex-col">
         <h2 class="text-2xl font-bold mb-4">Category Details</h2>
-        <p><span class="font-semibold">ID:</span> {{ category.id }}</p>
-        <p><span class="font-semibold">Name:</span> {{ category.name }}</p>
-        <p><span class="font-semibold">Description:</span> {{ category.description }}</p>
-        <RouterLink class="mt-4" :to="`/admin/editcategorie/${category.id || ''}`">
-          <BBtn label="Edit" />
+        <p class="mb-2"><span class="font-semibold">ID:</span> {{ category.id }}</p>
+        <p class="mb-2"><span class="font-semibold">Name:</span> {{ category.name }}</p>
+        <p class="mb-4">
+          <span class="font-semibold">Description:</span> {{ category.description }}
+        </p>
+        <RouterLink :to="`/admin/editcategorie/${category.id || ''}`">
+          <BBtn label="Edit" class="w-full" />
         </RouterLink>
       </div>
     </BSimpleCard>

@@ -37,22 +37,25 @@ const handleUpdateCategory = async () => {
 </script>
 
 <template>
-  <div class="container mx-auto mt-8">
-    <h1 class="text-3xl font-bold mb-6">Edit Category</h1>
-    <div v-if="editedCategory" class="bg-white dark:bg-zinc-800 rounded-lg shadow-lg p-6 space-y-2">
+  <div class="container mx-auto mt-4 p-4 dark:bg-zinc-900">
+    <h1 class="text-2xl lg:text-3xl font-bold mb-6">Edit Category</h1>
+    <div
+      v-if="editedCategory"
+      class="bg-white dark:bg-zinc-800 rounded-lg shadow-lg p-4 lg:p-6 space-y-4"
+    >
       <BInput
         name="editCategory"
         placeholder="Category name"
         type="text"
         v-model="editedCategory.name"
-        class="mb-2"
+        class="w-full"
       />
       <BInput
         name="editCategoryDescription"
         placeholder="Category description"
         type="text"
         v-model="editedCategory.description"
-        class="mb-2"
+        class="w-full"
       />
       <BBtn label="Save" @click="handleUpdateCategory" class="w-full" />
     </div>

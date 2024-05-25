@@ -35,10 +35,10 @@ const handleCategory = async () => {
 </script>
 
 <template>
-  <div class="container mx-auto mt-2 dark:bg-zinc-900">
+  <div class="container mx-auto mt-2 p-4 md:p-6 lg:p-8 dark:bg-zinc-900">
     <div class="mb-8">
-      <h1 class="text-3xl font-bold mb-6">Existing Categories:</h1>
-      <div class="bg-white dark:bg-zinc-800 rounded-lg shadow-lg p-6">
+      <h1 class="text-2xl md:text-3xl font-bold mb-4 md:mb-6">Existing Categories:</h1>
+      <div class="bg-white dark:bg-zinc-800 rounded-lg shadow-lg p-4 md:p-6">
         <div class="flex flex-wrap gap-2">
           <RouterLink
             v-for="category in categories"
@@ -51,8 +51,8 @@ const handleCategory = async () => {
         </div>
       </div>
     </div>
-    <h1 class="text-3xl font-bold mb-6">Create Category</h1>
-    <div class="bg-white dark:bg-zinc-800 rounded-lg shadow-lg p-6 space-y-2 mb-2">
+    <h1 class="text-2xl md:text-3xl font-bold mb-4 md:mb-6">Create Category</h1>
+    <div class="bg-white dark:bg-zinc-800 rounded-lg shadow-lg p-4 md:p-6 space-y-4">
       <BInput
         name="createCategory"
         placeholder="Category name"

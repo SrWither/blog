@@ -101,14 +101,13 @@ onBeforeMount(async () => {
 <template>
   <div class="overflow-hidden">
     <div
-      :class="['grid transition-colors', isPreviewOnly ? 'grid-cols-1' : 'grid-cols-2']"
-      style="height: calc(100vh - 8rem)"
-      class="dark:bg-zinc-900"
+      :class="['grid transition-colors', isPreviewOnly ? 'grid-cols-1' : 'md:grid-cols-2']"
+      class="h-screen dark:bg-zinc-900"
     >
       <!-- Form Section -->
       <div
         v-if="!isPreviewOnly"
-        class="p-8 overflow-scroll"
+        class="p-4 md:p-8 overflow-scroll"
         v-motion
         :initial="{ opacity: 1, x: -100 }"
         :enter="{ opacity: 1, x: 0 }"
@@ -146,7 +145,7 @@ onBeforeMount(async () => {
               @paste="handlePaste"
               v-model="newpost.content"
               placeholder="Content"
-              class="w-full rounded-md h-24 lg:h-32 xl:h-48 2xl:h-72 resize-none border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring focus:ring-purple-500 dark:bg-zinc-700 dark:text-white"
+              class="w-full rounded-md h-32 md:h-48 lg:h-72 xl:h-96 resize-none border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring focus:ring-purple-500 dark:bg-zinc-700 dark:text-white"
             />
           </div>
 
@@ -180,8 +179,8 @@ onBeforeMount(async () => {
       <div
         :class="
           isPreviewOnly
-            ? 'p-8 bg-white dark:bg-zinc-900 rounded-lg shadow-lg overflow-auto'
-            : 'p-8 overflow-scroll'
+            ? 'p-4 md:p-8 bg-white dark:bg-zinc-900 rounded-lg shadow-lg overflow-auto'
+            : 'p-4 md:p-8 overflow-scroll'
         "
         v-motion
         :initial="{ opacity: 1, x: 100 }"
