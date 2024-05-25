@@ -21,12 +21,11 @@ onBeforeMount(async () => {
         class="flex items-center justify-center h-full w-full bg-gradient-to-r from-purple-600 to-pink-500 dark:from-purple-800 dark:to-pink-700 bg-opacity-75"
       >
         <div class="text-center">
-          <h1 class="text-white text-4xl font-bold">Welcome to SurrealBlog</h1>
+          <h1 class="text-white text-4xl font-bold">Welcome to SrWither's Blog</h1>
           <p class="text-white text-lg mt-4">Explore and discover interesting content</p>
         </div>
       </div>
     </header>
-
     <!-- Last Posts Section -->
     <section id="posts" class="container mx-auto px-6 py-12">
       <h2 class="text-3xl font-bold text-center text-gray-800 dark:text-white mb-8">
