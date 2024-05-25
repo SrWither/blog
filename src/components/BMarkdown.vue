@@ -7,6 +7,8 @@ import * as emoji from 'node-emoji'
 import 'highlight.js/styles/atom-one-light.css'
 
 const props = defineProps<{ content: string }>()
+const emits = defineEmits(['clickImage'])
+
 const renderedContent = ref<string>('')
 
 const marked = new Marked(
@@ -43,6 +45,13 @@ const renderMarkdown = (markdown: string) => {
   return marked.parse(emoji.emojify(markdown))
 }
 
+const handleClick = (event: MouseEvent) => {
+  event.preventDefault()
+  if (event.target instanceof HTMLImageElement) {
+    emits('clickImage', event.target.src)
+  }
+}
+
 watch(
   () => props.content,
   async (newContent) => {
@@ -53,7 +62,12 @@ watch(
 </script>
 
 <template>
-  <div id="post-content" class="dark:text-white" v-html="renderedContent"></div>
+  <div
+    id="post-content"
+    class="dark:text-white"
+    v-html="renderedContent"
+    @contextmenu="handleClick"
+  ></div>
 </template>
 
 <style>

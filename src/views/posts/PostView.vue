@@ -26,6 +26,9 @@ const post = reactive({
   tags: []
 })
 
+const showLightbox = ref<boolean>(false)
+const lightboxImageUrl = ref<string>('')
+
 onBeforeMount(async () => {
   user.value = await getMyUser(authStore.token || '')
   if (postId.value) {
@@ -53,10 +56,23 @@ const formatDate = (date: Date) => {
 const canEditPost = computed(() => {
   return user.value && (post.user === user.value.id || user.value.role === 'roles:admin')
 })
+
+const handleLightbox = (imageUrl: string) => {
+  lightboxImageUrl.value = imageUrl
+  showLightbox.value = true
+}
+
+const closeLightbox = () => {
+  showLightbox.value = false
+  lightboxImageUrl.value = ''
+}
 </script>
 
 <template>
-  <div class="bg-gray-100 p-4 sm:p-6 dark:bg-zinc-900 dark:text-white min-h-screen transition-all">
+  <div
+    id="post-container"
+    class="bg-gray-100 p-4 sm:p-6 dark:bg-zinc-900 dark:text-white min-h-screen transition-all"
+  >
     <BSimpleCard class="py-4 sm:py-6 shadow-lg relative mx-auto">
       <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-center">{{ post.title }}</h1>
 
@@ -83,9 +99,39 @@ const canEditPost = computed(() => {
           <i class="pi pi-times"></i> Not Published
         </div>
         <div class="text-[1rem]">
-          <BMarkdown :content="post.content" />
+          <BMarkdown :content="post.content" @click-image="handleLightbox" />
         </div>
       </div>
     </BSimpleCard>
+
+    <transition name="lightbox">
+      <div
+        v-if="showLightbox"
+        class="fixed inset-0 bg-black bg-opacity-80 backdrop-blur-sm flex justify-center items-center z-50 lg:p-10"
+      >
+        <div class="max-w-full max-h-full flex">
+          <i
+            class="pi pi-times text-white text-2xl absolute top-4 right-4 cursor-pointer"
+            @click="closeLightbox"
+          ></i>
+          <img
+            :src="lightboxImageUrl"
+            alt="lightbox image"
+            class="max-w-full max-h-full rounded-lg"
+          />
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
+
+<style scoped>
+.lightbox-enter-active,
+.lightbox-leave-active {
+  transition: opacity 0.5s;
+}
+.lightbox-enter-from,
+.lightbox-leave-to {
+  opacity: 0;
+}
+</style>
