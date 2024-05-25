@@ -3,7 +3,7 @@ import BBtn from '@/components/BBtn.vue'
 import BInput from '@/components/BInput.vue'
 import BMarkdown from '@/components/BMarkdown.vue'
 import BInputLabel from '@/components/BInputLabel.vue'
-import BSelect, { type Option } from '@/components/BSelect.vue'
+import BNewSelect, { type Option } from '@/components/BNewSelect.vue'
 import { onBeforeMount, reactive, ref } from 'vue'
 import { AuthStore } from '@/stores/auth'
 import { createPost, type Post } from '@/api/posts'
@@ -11,12 +11,14 @@ import { useRouter } from 'vue-router'
 import { type Category, getCategories } from '@/api/categories'
 import { uploadImage } from '@/api/images'
 
+const posttags = ref<string>('')
 const newpost = reactive<Post>({
   title: '',
   content: '',
   description: '',
   published: false,
-  category: ''
+  category: '',
+  tags: []
 })
 
 const categories = ref<Category[]>([])
@@ -32,6 +34,7 @@ const cursorPos = ref(0)
 
 const handleCreatePost = async () => {
   if (authStore.token) {
+    newpost.tags = posttags.value.split(' ')
     const post = await createPost(authStore.token, newpost)
     if (post) {
       router.push(`/post/${post.id}`)
@@ -135,6 +138,16 @@ onBeforeMount(async () => {
           </div>
 
           <div class="mb-4">
+            <BInputLabel text="Category" />
+            <BNewSelect
+              label="Category"
+              name="selectedOption"
+              v-model="newpost.category"
+              :options="optionCategories"
+            />
+          </div>
+
+          <div class="mb-4">
             <BInputLabel text="Content" />
             <textarea
               ref="textarea"
@@ -151,12 +164,8 @@ onBeforeMount(async () => {
           </div>
 
           <div class="mb-4">
-            <BSelect
-              label="Category"
-              name="selectedOption"
-              v-model="newpost.category"
-              :options="optionCategories"
-            />
+            <BInputLabel text="Tags" />
+            <BInput type="text" name="tags" v-model="posttags" placeholder="tags" />
           </div>
 
           <div class="mb-2 flex items-center space-x-2">

@@ -3,7 +3,7 @@ import BBtn from '@/components/BBtn.vue'
 import BInput from '@/components/BInput.vue'
 import BMarkdown from '@/components/BMarkdown.vue'
 import BInputLabel from '@/components/BInputLabel.vue'
-import BSelect, { type Option } from '@/components/BSelect.vue'
+import BNewSelect, { type Option } from '@/components/BNewSelect.vue'
 import { onBeforeMount, reactive, ref } from 'vue'
 import { AuthStore } from '@/stores/auth'
 import { updatePost, getPost, type Post } from '@/api/posts'
@@ -27,12 +27,14 @@ const postId = ref<string | undefined>(
 const imgApi = import.meta.env.VITE_IMAGEAPI
 
 const isAuthenticated = ref(false)
+const posttags = ref<string>('')
 const updatepost = reactive<Post>({
   title: '',
   content: '',
   description: '',
   published: false,
-  category: ''
+  category: '',
+  tags: []
 })
 
 const textarea = ref<HTMLTextAreaElement | null>(null)
@@ -45,7 +47,7 @@ const loadPostData = async () => {
       router.back()
       return false
     }
-
+    posttags.value = postData.tags?.join(' ') || ''
     Object.assign(updatepost, postData)
   }
   return true
@@ -68,6 +70,7 @@ onBeforeMount(async () => {
 
 const handleEditPost = async () => {
   if (authStore.token) {
+    updatepost.tags = posttags.value.split(' ')
     const post = await updatePost(authStore.token, postId.value || '', updatepost)
     if (post) {
       router.push(`/post/${post.id}`)
@@ -165,6 +168,16 @@ onBeforeMount(async () => {
           </div>
 
           <div class="mb-4">
+            <BInputLabel text="Category" />
+            <BNewSelect
+              label="Category"
+              name="selectedOption"
+              v-model="updatepost.category"
+              :options="optionCategories"
+            />
+          </div>
+
+          <div class="mb-4">
             <BInputLabel text="Content" />
             <textarea
               ref="textarea"
@@ -181,12 +194,8 @@ onBeforeMount(async () => {
           </div>
 
           <div class="mb-4">
-            <BSelect
-              label="Category"
-              name="selectedOption"
-              v-model="updatepost.category"
-              :options="optionCategories"
-            />
+            <BInputLabel text="Tags" />
+            <BInput type="text" name="tags" v-model="posttags" placeholder="tags" />
           </div>
 
           <div class="mb-4 flex items-center space-x-2">
