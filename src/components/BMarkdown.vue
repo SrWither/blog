@@ -19,6 +19,26 @@ const marked = new Marked(
   })
 )
 
+// youtube videos
+marked.use({
+  renderer: {
+    link(href, title, text) {
+      const youtubeMatch = href.match(
+        /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/ ]{11})/
+      )
+      if (youtubeMatch) {
+        const videoId = youtubeMatch[1]
+        return `
+        <div class="youtube">
+          <iframe class="youtube-iframe" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+        </div>
+      `
+      }
+      return `<a href="${href}" title="${title}">${text}</a>`
+    }
+  }
+})
+
 const renderMarkdown = (markdown: string) => {
   return marked.parse(emoji.emojify(markdown))
 }
@@ -277,4 +297,22 @@ watch(
 
 /* #post-content details[open] {
 } */
+
+#post-content .youtube {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%;
+  margin-bottom: 1rem;
+}
+
+#post-content .youtube-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
 </style>
