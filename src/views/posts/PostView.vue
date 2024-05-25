@@ -55,9 +55,9 @@ const canEditPost = computed(() => {
 </script>
 
 <template>
-  <div class="bg-gray-100 p-6 dark:bg-zinc-900 dark:text-white">
-    <BSimpleCard class="py-6 shadow-lg relative">
-      <h1 class="text-4xl font-bold mb-4 text-center">{{ post.title }}</h1>
+  <div class="bg-gray-100 p-4 sm:p-6 dark:bg-zinc-900 dark:text-white min-h-screen">
+    <BSimpleCard class="py-4 sm:py-6 shadow-lg relative mx-auto">
+      <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-center">{{ post.title }}</h1>
 
       <div class="flex justify-center mb-4 absolute top-4 left-4">
         <router-link v-if="canEditPost" :to="`/editpost/${postId}`">
@@ -67,8 +67,8 @@ const canEditPost = computed(() => {
 
       <p class="mb-4 text-center text-zinc-500">{{ formatDate(post.updated_at) }}</p>
 
-      <div class="lg:mx-20 md:mx-10 sm:mx-2 text-lg">
-        <div v-if="!post.published" class="text-red-600 font-semibold text-center">
+      <div class="px-2 sm:px-4 md:px-10 lg:px-20 text-lg">
+        <div v-if="!post.published" class="text-red-600 font-semibold text-center mb-4">
           <i class="pi pi-times"></i> Not Published
         </div>
         <div class="text-[1rem]">

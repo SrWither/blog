@@ -132,7 +132,8 @@ onBeforeMount(async () => {
   <div class="overflow-hidden">
     <div
       :class="['grid transition-colors', isPreviewOnly ? 'grid-cols-1' : 'md:grid-cols-2']"
-      class="h-screen dark:bg-zinc-900"
+      class="dark:bg-zinc-900"
+      style="height: calc(100vh - 8rem)"
     >
       <!-- Form Section -->
       <div

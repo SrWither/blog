@@ -21,8 +21,10 @@ watch(
 
 onBeforeMount(async () => {
   if (authStore.token) {
-    await authenticate(authStore.token)
-    user.value = await getMyUser(authStore.token)
+    const isAuth = await authenticate(authStore.token)
+
+    if (isAuth) user.value = await getMyUser(authStore.token)
+    else authStore.clearToken()
   }
 })
 
@@ -40,7 +42,7 @@ const toggleDark = () => {
   >
     <header>
       <BNav
-        title="SrWither"
+        title="Unknown"
         :is-auth="authStore.token !== null"
         :is-admin="user?.role === 'roles:admin'"
       />
@@ -56,7 +58,7 @@ const toggleDark = () => {
       class="bg-gradient-to-r from-purple-500 to-pink-500 dark:from-purple-700 dark:to-pink-700 transition-all shadow mt-auto text-white"
     >
       <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-        <p>© 2024 SrWither</p>
+        <p>© 2024 Unknown</p>
         <div class="flex space-x-4">
           <p>All rights reserved</p>
           <button @click="toggleDark">Theme</button>
