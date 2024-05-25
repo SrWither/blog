@@ -42,7 +42,7 @@ const toggleDark = () => {
   >
     <header>
       <BNav
-        title="Unknown"
+        title="Nameless"
         :is-auth="authStore.token !== null"
         :is-admin="user?.role === 'roles:admin'"
       />
@@ -58,7 +58,7 @@ const toggleDark = () => {
       class="bg-gradient-to-r from-purple-500 to-pink-500 dark:from-purple-700 dark:to-pink-700 transition-all shadow mt-auto text-white"
     >
       <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-        <p>© 2024 Unknown</p>
+        <p>© 2024 Nameless</p>
         <div class="flex space-x-4">
           <p>All rights reserved</p>
           <button @click="toggleDark">Theme</button>
