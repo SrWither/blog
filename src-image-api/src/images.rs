@@ -3,7 +3,18 @@ use std::path::Path;
 use uuid::Uuid;
 use crate::query::{SimpleResponse, ErrorMessage};
 
-
+/// Handles copying a file to a destination directory.
+///
+/// # Arguments
+///
+/// * `file` - The file to be copied, wrapped in a `FilePart`.
+/// * `dest` - The destination directory where the file should be copied.
+/// * `filename` - The name of the file.
+///
+/// # Returns
+///
+/// Returns a `SimpleResponse` if the file is successfully copied,
+/// or an `ErrorMessage` if an error occurs during copying.
 fn handle_file_copy(file: &FilePart, dest: String, filename: String) -> Result<SimpleResponse, ErrorMessage> {
     match std::fs::copy(&file.path(), Path::new(&dest)) {
         Ok(_) => Ok(SimpleResponse { message: filename}),
@@ -11,6 +22,14 @@ fn handle_file_copy(file: &FilePart, dest: String, filename: String) -> Result<S
     }
 }
 
+/// Endpoint handler for file upload.
+///
+/// This function handles HTTP POST requests to upload a file.
+///
+/// # Arguments
+///
+/// * `req` - Mutable reference to the incoming request.
+/// * `res` - Mutable reference to the response to be generated.
 #[handler]
 pub async fn upload(req: &mut Request, res: &mut Response) {
     let file = req.file("file").await;
