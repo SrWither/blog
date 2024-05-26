@@ -16,7 +16,7 @@ const authMiddleware = async (
 ): Promise<void> => {
   const token = getItemFromLocalStorage<string>('auth')
 
-  if (token && to.path === '/login') {
+  if (token && (to.path === '/login' || to.path === '/register')) {
     // If token exists and user is trying to access login page, check authentication status
     try {
       const isAuth = await authenticate(token)
@@ -32,7 +32,7 @@ const authMiddleware = async (
       console.error('Authentication error:', error)
       next('/login')
     }
-  } else if (!token && (to.path === '/createpost' || to.path.includes('/updatepost'))) {
+  } else if (!token && (to.path === '/createpost' || to.path.includes('/editpost'))) {
     // If no token and trying to access createpost or updatepost routes, redirect to home page
     next('/')
   } else {
