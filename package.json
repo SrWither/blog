@@ -23,7 +23,8 @@
     "primeicons": "^7.0.0",
     "surrealdb.js": "0.11.0",
     "vue": "^3.4.27",
-    "vue-router": "^4.3.2"
+    "vue-router": "^4.3.2",
+    "vue3-google-login": "^2.0.26"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.10.2",

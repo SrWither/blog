@@ -41,6 +41,9 @@ importers:
       vue-router:
         specifier: ^4.3.2
         version: 4.3.2(vue@3.4.27(typescript@5.4.5))
+      vue3-google-login:
+        specifier: ^2.0.26
+        version: 2.0.26(vue@3.4.27(typescript@5.4.5))
     devDependencies:
       '@rushstack/eslint-patch':
         specifier: ^1.10.2
@@ -2147,6 +2150,11 @@ packages:
     hasBin: true
     peerDependencies:
       typescript: '*'
+
+  vue3-google-login@2.0.26:
+    resolution: {integrity: sha512-BuTSIeSjINNHNPs+BDF4COnjWvff27IfCBDxK6JPRqvm57lF8iK4B3+zcG8ud6BXfZdyuiDlxletbEDgg4/RFA==}
+    peerDependencies:
+      vue: ^3.0.3
 
   vue@3.4.27:
     resolution: {integrity: sha512-8s/56uK6r01r1icG/aEOHqyMVxd1bkYcSe9j8HcKtr/xTOFWvnzIVTehNW+5Yt89f+DLBe4A569pnZLS5HzAMA==}
@@ -4390,6 +4398,10 @@ snapshots:
       '@vue/language-core': 2.0.17(typescript@5.4.5)
       semver: 7.6.2
       typescript: 5.4.5
+
+  vue3-google-login@2.0.26(vue@3.4.27(typescript@5.4.5)):
+    dependencies:
+      vue: 3.4.27(typescript@5.4.5)
 
   vue@3.4.27(typescript@5.4.5):
     dependencies:

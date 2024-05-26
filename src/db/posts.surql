@@ -2,11 +2,12 @@ DEFINE TABLE Posts SCHEMALESS
     PERMISSIONS
         FOR select
             WHERE published = true
+            OR user = $auth.id
             OR $auth.role = roles:admin
-        FOR create, update
-            WHERE $auth.role = roles:admin
-        FOR delete
-            WHERE $auth.role = roles:admin
+        FOR create, update, delete
+            WHERE 
+            user = $auth.id
+            OR $auth.role = roles:admin
 ;
 
 DEFINE FIELD title ON TABLE Posts TYPE string;
