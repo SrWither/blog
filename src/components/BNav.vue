@@ -29,6 +29,12 @@ const handleLogout = async () => {
         <span>Posts</span>
       </RouterLink>
 
+      <!--Create post-->
+      <RouterLink class="space-x-2 flex items-center" to="/createpost" v-if="isAuth">
+        <i class="pi pi-file-plus"></i>
+        <span>Create Post</span>
+      </RouterLink>
+
       <!--Admin-->
       <RouterLink class="space-x-2 flex items-center" to="/admin" v-if="isAdmin">
         <i class="pi pi-user-plus"></i>
@@ -39,6 +45,12 @@ const handleLogout = async () => {
       <RouterLink class="space-x-2 flex items-center" to="/login" v-if="!isAuth">
         <i class="pi pi-sign-in"></i>
         <span>Login</span>
+      </RouterLink>
+
+      <!--Register-->
+      <RouterLink class="space-x-2 flex items-center" to="/register" v-if="!isAuth">
+        <i class="pi pi-user-plus"></i>
+        <span>Register</span>
       </RouterLink>
 
       <!--Logout-->

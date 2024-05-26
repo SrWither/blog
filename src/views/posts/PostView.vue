@@ -83,9 +83,9 @@ const closeLightbox = () => {
           <BBtn label="Edit Post" />
         </router-link>
       </div>
-      <div class="flex justify-center mb-4 absolute top-4 right-4">
+      <!-- <div class="flex justify-center mb-4 absolute top-4 right-4">
         <BBtn v-if="canEditPost" label="Delete Post" />
-      </div>
+      </div> -->
 
       <p class="mb-2 text-center text-zinc-500">{{ formatDate(post.updated_at) }}</p>
 

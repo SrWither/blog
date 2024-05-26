@@ -66,10 +66,16 @@ const handleProfilePictureChange = async (event: Event) => {
 
 // Handler for OAuth registration data
 const handleOAuthData = async (userData: any, provider: string) => {
+  console.log(userData.sub, userData.email, userData.name, userData.picture)
+  console.log('Handle the userData', userData)
   const token = await oAuthRegister(userData.sub, userData.email, provider)
   if (token) {
-    // Set token and move to profile creation step
-    authStore.setToken(token)
+    // Create user profile after OAuth registration
+    const profile = await createProfile(token, userData.name, userData.picture)
+    if (profile) {
+      authStore.setToken(token)
+      router.push('/')
+    }
   }
 }
 
