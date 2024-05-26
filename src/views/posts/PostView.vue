@@ -118,6 +118,10 @@ const closeLightbox = () => {
             :src="lightboxImageUrl"
             alt="lightbox image"
             class="object-contain lg:object-scale-down max-w-full max-h-full rounded-lg"
+            v-motion
+            :initial="{ opacity: 1, scale: 0 }"
+            :enter="{ opacity: 1, scale: 1 }"
+            :duration="1200"
           />
         </div>
       </div>
@@ -128,7 +132,7 @@ const closeLightbox = () => {
 <style scoped>
 .lightbox-enter-active,
 .lightbox-leave-active {
-  transition: opacity 0.5s;
+  transition: opacity 0.1s;
 }
 .lightbox-enter-from,
 .lightbox-leave-to {
