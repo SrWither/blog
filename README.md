@@ -56,7 +56,7 @@ surreal start --log debug --user root --pass root --bind 0.0.0.0:7435  memory
 ```
 ### Open sql
 ```
-surreal sql --conn http://localhost:7435 -u root -p root --ns blog --db blog --pretty
+surreal sql --conn http://0.0.0.0:7435 -u root -p root --ns blog --db blog --pretty
 ```
 ### Setup database
 ```hs
@@ -170,8 +170,8 @@ npm install
 
 ### Set up `.env`
 ```env
-VITE_SURREALDB="http://localhost:7435/rpc"
-VITE_IMAGEAPI="http://localhost:5800/"
+VITE_SURREALDB="http://0.0.0.0:7435/rpc"
+VITE_IMAGEAPI="http://0.0.0.0:5800/"
 ```
 
 ### Start image api and app
