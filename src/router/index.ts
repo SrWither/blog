@@ -59,13 +59,13 @@ const router = createRouter({
       path: '/createpost',
       name: 'createpost',
       component: CreatePost,
-      beforeEnter: adminMiddleware
+      beforeEnter: authMiddleware
     },
     {
       path: '/editpost/:id',
       name: 'editpost',
       component: EditPost,
-      beforeEnter: adminMiddleware
+      beforeEnter: authMiddleware
     },
 
     {

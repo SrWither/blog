@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import BCard from '@/components/BCard.vue'
+import { ProfileStore } from '@/stores/profile'
 import { type Post, getLastsPosts } from '@/api/posts'
 import { onBeforeMount, ref } from 'vue'
 
+const profileStore = ProfileStore()
 const posts = ref<Post[]>([])
+
+const profile = profileStore.profile
 
 onBeforeMount(async () => {
   posts.value = await getLastsPosts()
@@ -21,7 +25,10 @@ onBeforeMount(async () => {
         class="flex items-center justify-center h-full w-full bg-gradient-to-r from-purple-600 to-pink-500 dark:from-purple-800 dark:to-pink-700 bg-opacity-75"
       >
         <div class="text-center">
-          <h1 class="text-white text-4xl font-bold">Welcome to Nameless's Blog</h1>
+          <h1 class="text-white text-4xl font-bold" v-if="profile">
+            ¡Welcome {{ profile.username }}!
+          </h1>
+          <h1 class="text-white text-4xl font-bold" v-else>Welcome to Nameless's Blog</h1>
           <p class="text-white text-lg mt-4">Explore and discover interesting content</p>
         </div>
       </div>

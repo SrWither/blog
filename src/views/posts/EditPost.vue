@@ -11,6 +11,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { type Category, getCategories } from '@/api/categories'
 import { authenticate } from '@/api/auth'
 import { uploadImage } from '@/api/images'
+import { type User, getMyUser } from '@/api/users'
 
 const categories = ref<Category[]>([])
 const optionCategories = ref<Option[]>([])
@@ -19,6 +20,7 @@ const isPreviewOnly = ref(false)
 const router = useRouter()
 const authStore = AuthStore()
 const route = useRoute()
+const user = ref<User | null>(null)
 
 const postId = ref<string | undefined>(
   Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
@@ -61,10 +63,21 @@ const updateCursorPos = () => {
 
 onBeforeMount(async () => {
   isAuthenticated.value = await authenticate(authStore.token || '')
+  user.value = await getMyUser(authStore.token || '')
   if (!isAuthenticated.value) {
     router.push('/')
-  } else {
-    await loadPostData()
+    return
+  }
+  if (!user.value) {
+    router.push('/403')
+    return
+  }
+
+  await loadPostData()
+
+  if (!(updatepost.user == user.value.id)) {
+    router.push('/403')
+    return
   }
 })
 

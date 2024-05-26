@@ -2,12 +2,15 @@
 import BNav from '@/components/BNav.vue'
 
 import { AuthStore } from '@/stores/auth'
-import { getMyUser, type User } from './api/users'
+import { ProfileStore } from '@/stores/profile'
+import { getMyUser, type User } from '@/api/users'
 import { authenticate } from '@/api/auth'
 import { onBeforeMount, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { getMyProfile } from './api/profiles'
 
 const authStore = AuthStore()
+const profileStore = ProfileStore()
 const user = ref<User | null>(null)
 const isDark = ref<boolean>(false)
 const router = useRouter()
@@ -23,6 +26,10 @@ watch(
   async (token) => {
     if (token) {
       user.value = await getMyUser(token)
+      const profile = await getMyProfile(token)
+      if (profile) {
+        profileStore.setProfile(profile)
+      }
     }
   }
 )
@@ -31,8 +38,13 @@ onBeforeMount(async () => {
   if (authStore.token) {
     const isAuth = await authenticate(authStore.token)
 
-    if (isAuth) user.value = await getMyUser(authStore.token)
-    else authStore.clearToken()
+    if (isAuth) {
+      user.value = await getMyUser(authStore.token)
+      const profile = await getMyProfile(authStore.token)
+      if (profile) {
+        profileStore.setProfile(profile)
+      }
+    } else authStore.clearToken()
   }
 })
 
