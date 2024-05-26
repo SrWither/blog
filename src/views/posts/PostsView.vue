@@ -41,6 +41,17 @@ onBeforeMount(async () => {
     }))
   ]
 })
+
+const formatDate = (date: Date) => {
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  }
+  return new Date(date).toLocaleString('en-US', options)
+}
 </script>
 
 <template>
@@ -91,7 +102,9 @@ onBeforeMount(async () => {
           </div>
           <div class="bg-white dark:bg-zinc-900 rounded-lg shadow-lg p-4">
             <h2 class="text-xl font-semibold dark:text-white">{{ selectedPost?.title }}</h2>
-            <p class="text-gray-500 mb-2">Updated at: {{ selectedPost?.updated_at }}</p>
+            <p class="text-gray-500 mb-2">
+              Updated at: {{ formatDate(selectedPost?.updated_at || new Date()) }}
+            </p>
             <p class="mb-4 dark:text-gray-300">{{ selectedPost?.description }}</p>
             <div class="flex flex-wrap gap-2">
               <span
