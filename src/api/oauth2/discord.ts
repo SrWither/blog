@@ -12,7 +12,7 @@ export const getCode = (): Promise<string> => {
     const interval = setInterval(() => {
       try {
         if (popup) {
-          if (popup.location.href.indexOf(import.meta.env.VITE_REDIRECTURI) !== -1) {
+          if (popup.location.href.indexOf(import.meta.env.VITE_DSREDIRECTURI) !== -1) {
             clearInterval(interval)
             const urlParams = new URLSearchParams(popup.location.search)
             const code = urlParams.get('code')
@@ -40,7 +40,7 @@ export const exchangeCodeForToken = async (code: string): Promise<string> => {
         client_secret: import.meta.env.VITE_DSSECRET,
         code: code,
         grant_type: 'authorization_code',
-        redirect_uri: import.meta.env.VITE_REDIRECTURI,
+        redirect_uri: import.meta.env.VITE_DSREDIRECTURI,
         scope: 'identify email'
       }),
       {

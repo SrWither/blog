@@ -49,7 +49,10 @@ const handleRegister = async () => {
 
 // Handler for creating user profile
 const handleCreateProfile = async (username: string, profilePicture: string, token: string) => {
-  const profile = await createProfile(token, username, profilePicture)
+  const profile = await createProfile(token, {
+    username,
+    avatar: profilePicture
+  })
   if (profile) {
     router.push('/')
   }
@@ -71,7 +74,11 @@ const handleOAuthData = async (userData: any, provider: string) => {
   const token = await oAuthRegister(userData.sub, userData.email, provider)
   if (token) {
     // Create user profile after OAuth registration
-    const profile = await createProfile(token, userData.name, userData.picture)
+    const profile = await createProfile(token, {
+      username: userData.name,
+      avatar: userData.picture,
+      oauth: true
+    })
     if (profile) {
       authStore.setToken(token)
       router.push('/')

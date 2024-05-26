@@ -24,37 +24,43 @@ const handleLogout = async () => {
   >
     <RouterLink to="/" class="font-bold text-xl">{{ title }}</RouterLink>
     <div class="flex items-center space-x-4">
-      <RouterLink class="space-x-2 flex items-center" to="/posts">
+      <RouterLink class="flex items-center space-x-2" to="/posts">
         <i class="pi pi-file"></i>
         <span>Posts</span>
       </RouterLink>
 
-      <!--Create post-->
-      <RouterLink class="space-x-2 flex items-center" to="/createpost" v-if="isAuth">
+      <!-- Create post -->
+      <RouterLink class="flex items-center space-x-2" to="/createpost" v-if="isAuth">
         <i class="pi pi-file-plus"></i>
         <span>Create Post</span>
       </RouterLink>
 
-      <!--Admin-->
-      <RouterLink class="space-x-2 flex items-center" to="/admin" v-if="isAdmin">
+      <!-- Admin -->
+      <RouterLink class="flex items-center space-x-2" to="/admin" v-if="isAdmin">
         <i class="pi pi-user-plus"></i>
         <span>Admin</span>
       </RouterLink>
 
-      <!--Login-->
-      <RouterLink class="space-x-2 flex items-center" to="/login" v-if="!isAuth">
+      <!-- Profile -->
+      <RouterLink class="flex items-center space-x-2" to="/profile" v-if="isAuth">
+        <i class="pi pi-user"></i>
+        <span>Profile</span>
+      </RouterLink>
+
+      <!-- Login -->
+      <RouterLink class="flex items-center space-x-2" to="/login" v-if="!isAuth">
         <i class="pi pi-sign-in"></i>
         <span>Login</span>
       </RouterLink>
 
-      <!--Register-->
-      <RouterLink class="space-x-2 flex items-center" to="/register" v-if="!isAuth">
+      <!-- Register -->
+      <RouterLink class="flex items-center space-x-2" to="/register" v-if="!isAuth">
         <i class="pi pi-user-plus"></i>
         <span>Register</span>
       </RouterLink>
 
-      <!--Logout-->
-      <button class="space-x-2 flex items-center" v-else @click="handleLogout">
+      <!-- Logout -->
+      <button class="flex items-center space-x-2" v-else @click="handleLogout">
         <i class="pi pi-sign-out"></i>
         <span>Logout</span>
       </button>

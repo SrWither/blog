@@ -5,21 +5,17 @@ export type Profile = {
   id?: string
   username: string
   avatar: string
+  oauth?: boolean
 }
 
 /**
  * Creates a new profile for the authenticated user.
  *
  * @param {string} token The authentication token of the user.
- * @param {string} username The username for the new profile.
- * @param {string} avatar The avatar URL for the new profile.
+ * @param {Profile} data The username for the new profile.
  * @returns {Promise<Profile | null>} A promise that resolves with the created profile upon success, or null if an error occurs.
  */
-export const createProfile = async (
-  token: string,
-  username: string,
-  avatar: string
-): Promise<Profile | null> => {
+export const createProfile = async (token: string, data: Profile): Promise<Profile | null> => {
   try {
     // Authenticate the user with the provided token
     const isAuthenticated = await db.authenticate(token)
@@ -29,10 +25,7 @@ export const createProfile = async (
     }
 
     // Create a new profile in the 'Profiles' table
-    const [profile] = await db.create<Profile>('Profiles', {
-      username,
-      avatar
-    })
+    const [profile] = await db.create<Profile>('Profiles', data)
 
     return profile // Return the created profile
   } catch (e) {

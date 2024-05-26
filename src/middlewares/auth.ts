@@ -32,7 +32,13 @@ const authMiddleware = async (
       console.error('Authentication error:', error)
       next('/login')
     }
-  } else if (!token && (to.path === '/createpost' || to.path.includes('/editpost'))) {
+  } else if (
+    !token &&
+    (to.path === '/createpost' ||
+      to.path.includes('/editpost') ||
+      to.path.includes('/profile') ||
+      to.path.includes('/myprofile'))
+  ) {
     // If no token and trying to access createpost or updatepost routes, redirect to home page
     next('/')
   } else {

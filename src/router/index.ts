@@ -14,6 +14,10 @@ import PostsView from '@/views/posts/PostsView.vue'
 import PostView from '@/views/posts/PostView.vue'
 import EditPost from '@/views/posts/EditPost.vue'
 
+import ProfileView from '@/views/profiles/ProfileView.vue'
+import EditProfile from '@/views/profiles/EditProfile.vue'
+import MyProfile from '@/views/profiles/MyProfile.vue'
+
 import authMiddleware from '@/middlewares/auth'
 import adminMiddleware from '@/middlewares/admin'
 import PageNotFound from '@/views/PageNotFound.vue'
@@ -65,6 +69,24 @@ const router = createRouter({
       path: '/editpost/:id',
       name: 'editpost',
       component: EditPost,
+      beforeEnter: authMiddleware
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: MyProfile,
+      beforeEnter: authMiddleware
+    },
+    {
+      path: '/profile/:id',
+      name: 'profileid',
+      component: ProfileView,
+      beforeEnter: authMiddleware
+    },
+    {
+      path: '/editprofile/:id',
+      name: 'editprofile',
+      component: EditProfile,
       beforeEnter: authMiddleware
     },
 

@@ -5,6 +5,7 @@ DEFINE TABLE Profiles SCHEMAFULL
 
 DEFINE FIELD username ON TABLE Profiles TYPE string;
 DEFINE FIELD avatar ON TABLE Profiles TYPE string;
+DEFINE FIELD oauth ON TABLE Profiles TYPE bool DEFAULT false;
 DEFINE FIELD user ON TABLE Profiles TYPE record(Users) DEFAULT $auth.id;
 
 DEFINE INDEX profileUsernameIndex ON TABLE Profiles COLUMNS username UNIQUE;
