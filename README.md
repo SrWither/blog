@@ -1,39 +1,184 @@
-# blog
+# Blog using SurrealDB, Rust, and Vue.js
 
-This template should help get you started developing with Vue 3 in Vite.
+## Screenshots
 
-## Recommended IDE Setup
+### Home Page
+<kbd>
+  <img src="https://github.com/SrWither/blog/assets/59105868/f92520ce-5279-4b67-8d35-43aebe600d5e" alt="image 1">
+</kbd>
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+### Posts List
+<kbd>
+  <img src="https://github.com/SrWither/blog/assets/59105868/e577edac-63f2-47c3-9ae8-3f3f81bf52e9" alt="image 2">
+</kbd>
 
-## Type Support for `.vue` Imports in TS
+### Post Details (right click)
+<kbd>
+  <img src="https://github.com/SrWither/blog/assets/59105868/2e44bb5a-ef0d-480c-b94d-d098e4a85868" alt="image 3">
+</kbd>
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+### Admin Page
+<kbd>
+  <img src="https://github.com/SrWither/blog/assets/59105868/fef9b45a-3a73-4f41-adc6-01f19e402731" alt="image 4">
+</kbd>
 
-## Customize configuration
+### Category Details
+<kbd>
+  <img src="https://github.com/SrWither/blog/assets/59105868/db4ff811-8cac-47dc-9ccb-70969209cbca" alt="image 5">
+</kbd>
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+### Post Creation
+<kbd>
+  <img src="https://github.com/SrWither/blog/assets/59105868/bf1c9c89-dd67-4f8d-960a-5cc633548788" alt="image 6">
+</kbd>
 
-## Project Setup
+### Post View
+<kbd>
+  <img src="https://github.com/SrWither/blog/assets/59105868/7744404e-3ec8-40b6-91a9-4b50fe6f4b50" alt="image 7">
+</kbd>
 
+### Lightbox
+<kbd>
+  <img src="https://github.com/SrWither/blog/assets/59105868/052debad-391c-4f0f-88fe-6341dcac238a" alt="image 8">
+</kbd>
+
+## Dependencies
+
+- **SurrealDB**: [GitHub - surrealdb/surrealdb](https://github.com/surrealdb/surrealdb/)
+- **Rust**: [rustup.rs](https://rustup.rs/)
+- **Node.js**: [nodejs.org](https://nodejs.org/en)
+
+
+# Setup
+### Start surrealDB
 ```sh
-pnpm install
+surreal start --log debug --user root --pass root --bind 0.0.0.0:7435  memory
+```
+### Open sql
+```
+surreal sql --conn http://localhost:7435 -u root -p root --ns blog --db blog --pretty
+```
+### Setup database
+```hs
+DEFINE SCOPE Auth
+    SESSION 3d
+
+    SIGNUP (
+      CREATE Users
+      SET username = $username,
+          email = $email,
+          password = crypto::argon2::generate($password)
+    )
+
+    SIGNIN (
+      SELECT * FROM Users WHERE
+      email = $email
+      AND crypto::argon2::compare(password, $password)
+    )
+;
+
+DEFINE TABLE Categories SCHEMAFULL
+  PERMISSIONS
+        FOR select FULL
+        FOR create, update, delete WHERE $auth.role = roles:admin;
+
+DEFINE FIELD name ON TABLE Categories TYPE string;
+DEFINE FIELD description ON TABLE Categories TYPE string;DEFINE TABLE Posts SCHEMALESS
+    PERMISSIONS
+        FOR select
+            WHERE published = true
+            OR $auth.role = roles:admin
+        FOR create, update
+            WHERE $auth.role = roles:admin
+        FOR delete
+            WHERE $auth.role = roles:admin
+;
+
+DEFINE FIELD title ON TABLE Posts TYPE string;
+DEFINE FIELD description ON TABLE Posts TYPE string;
+DEFINE FIELD content ON TABLE Posts TYPE string;
+DEFINE FIELD published ON TABLE Posts TYPE bool DEFAULT false;
+DEFINE FIELD created_at ON TABLE Posts TYPE datetime DEFAULT time::now();
+DEFINE FIELD updated_at ON TABLE Posts TYPE datetime DEFAULT time::now() VALUE time::now();
+DEFINE FIELD user ON TABLE Posts TYPE record<Users> DEFAULT $auth.id;
+DEFINE FIELD category ON TABLE Posts TYPE record<Categories>;
+DEFINE FIELD tags ON TABLE Posts TYPE option<array<string>>;
+
+CREATE roles:admin SET name = "administrator";
+CREATE roles:user SET name = "user";
+
+DEFINE TABLE Users SCHEMAFULL
+    PERMISSIONS
+        FOR select FULL
+        FOR update, delete WHERE id = $auth.id OR role = roles:admin;
+
+DEFINE FIELD username ON TABLE Users TYPE string;
+DEFINE FIELD email ON TABLE Users TYPE string
+    ASSERT string::is::email($value);
+DEFINE FIELD password ON TABLE Users TYPE string;
+DEFINE FIELD role ON TABLE Users TYPE record(roles) DEFAULT roles:user;
+
+DEFINE INDEX userEmailIndex ON TABLE Users COLUMNS email UNIQUE;
+DEFINE INDEX userNameIndex ON TABLE Users COLUMNS username UNIQUE;
+```
+```hs
+CREATE Categories SET name = "Tutorials", description = "Step-by-step guides on various programming topics, from beginner to advanced levels.";
+CREATE Categories SET name = "Code Snippets", description = "Short pieces of reusable code for common tasks and problems, ready to be integrated into your projects.";
+CREATE Categories SET name = "Development Tools", description = "Reviews and tutorials on tools that enhance productivity, such as IDEs, debuggers, and code editors.";
+CREATE Categories SET name = "Programming Languages", description = "Articles and guides on different programming languages, including their syntax, features, and best use cases.";
+CREATE Categories SET name = "Frameworks", description = "In-depth looks at popular frameworks for web, mobile, and desktop development, including usage examples and best practices.";
+CREATE Categories SET name = "Software Development", description = "General articles on software development methodologies, best practices, and the software lifecycle.";
+CREATE Categories SET name = "Web Development", description = "Resources and tutorials focused on building websites and web applications, including front-end and back-end development.";
+CREATE Categories SET name = "Mobile Development", description = "Guides and tips for developing mobile applications for iOS, Android, and cross-platform solutions.";
+CREATE Categories SET name = "Game Development", description = "Tutorials, tips, and resources for creating video games, including graphics, physics, and user interaction.";
+CREATE Categories SET name = "DevOps", description = "Articles on integrating development and operations, including CI/CD pipelines, automation, and monitoring.";
+CREATE Categories SET name = "Cloud Computing", description = "Guides on leveraging cloud services for development, including infrastructure as a service (IaaS), platform as a service (PaaS), and software as a service (SaaS).";
+CREATE Categories SET name = "Artificial Intelligence", description = "Articles and tutorials on AI concepts, tools, and applications, from machine learning to neural networks.";
+CREATE Categories SET name = "Machine Learning", description = "In-depth resources on machine learning algorithms, tools, and real-world applications.";
+CREATE Categories SET name = "Data Science", description = "Guides and tutorials on data analysis, visualization, and interpretation using various data science tools and techniques.";
+CREATE Categories SET name = "Cybersecurity", description = "Tips, tools, and best practices for securing software, systems, and networks against cyber threats.";
+CREATE Categories SET name = "Project Management", description = "Articles on managing software projects, including methodologies like Agile, Scrum, and Kanban.";
+CREATE Categories SET name = "Version Control", description = "Tutorials on using version control systems like Git, including branching strategies, collaboration tips, and workflow integration.";
+CREATE Categories SET name = "Algorithms", description = "Detailed explanations and implementations of common algorithms, along with their use cases and performance considerations.";
+CREATE Categories SET name = "Data Structures", description = "Guides on various data structures, their implementations, and their applications in software development.";
+CREATE Categories SET name = "Best Practices", description = "Articles on best practices in coding, design patterns, and maintaining code quality and readability.";
+CREATE Categories SET name = "Tips and Tricks", description = "Quick tips and shortcuts to improve efficiency and effectiveness in programming and development.";
+CREATE Categories SET name = "Career Advice", description = "Guidance on building a career in software development, including job search tips, resume writing, and interview preparation.";
+CREATE Categories SET name = "Industry News", description = "Updates and commentary on the latest trends, technologies, and events in the software development industry.";
+CREATE Categories SET name = "Open Source", description = "Information on contributing to and benefiting from open-source projects, including popular open-source tools and libraries.";
+CREATE Categories SET name = "Personal Projects", description = "Showcases and case studies of personal projects, including the development process, challenges faced, and solutions implemented.";
+CREATE Categories SET name = "Interviews", description = "Interviews with industry experts, developers, and thought leaders, sharing their insights and experiences.";
+CREATE Categories SET name = "Reviews", description = "Reviews of software, tools, books, and other resources relevant to programmers and developers.";
+CREATE Categories SET name = "Books and Resources", description = "Recommendations and reviews of books, online courses, and other educational resources for developers.";
+CREATE Categories SET name = "Community Events", description = "Information on upcoming conferences, meetups, hackathons, and other events in the developer community.";
+CREATE Categories SET name = "Code Challenges", description = "Programming challenges and puzzles to test and improve coding skills, along with solutions and explanations.";
+```
+```hs
+CREATE Users SET 
+    username = "USERNAME",
+    email    = "EMAILf@gmail.com",
+    role     = roles:admin,
+    password = crypto::argon2::generate("123456")
 ```
 
-### Compile and Hot-Reload for Development
-
+### Clone repository
 ```sh
-pnpm dev
+git clone https://github.com/SrWither/blog
+cd blog
+npm install
 ```
 
-### Type-Check, Compile and Minify for Production
-
-```sh
-pnpm build
+### Set up `.env`
+```env
+VITE_SURREALDB="http://localhost:7435/rpc"
+VITE_IMAGEAPI="http://localhost:5800/"
 ```
 
-### Lint with [ESLint](https://eslint.org/)
-
+### Start image api and app
 ```sh
-pnpm lint
+npm run dev
+```
+```sh
+cd src-image-api
+cargo run
 ```
