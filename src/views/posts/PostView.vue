@@ -106,6 +106,7 @@ const closeLightbox = () => {
       </div>
     </BSimpleCard>
 
+    <!--Image lightbox-->
     <transition name="lightbox">
       <div
         v-if="showLightbox"

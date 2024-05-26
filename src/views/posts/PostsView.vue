@@ -27,7 +27,7 @@ const handleSearch = async () => {
 const handleInfo = (e: Event, data: Post) => {
   e.preventDefault()
   selectedPost.value = data
-  popup.value = true // Mostrar el popup
+  popup.value = true
 }
 
 onBeforeMount(async () => {
@@ -88,6 +88,8 @@ const formatDate = (date: Date) => {
         />
       </div>
     </div>
+
+    <!--Post details-->
     <Transition name="popup">
       <div
         v-show="popup"
