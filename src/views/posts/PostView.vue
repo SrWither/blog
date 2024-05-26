@@ -7,6 +7,7 @@ import { AuthStore } from '@/stores/auth'
 import BMarkdown from '@/components/BMarkdown.vue'
 import BSimpleCard from '@/components/BSimpleCard.vue'
 import BBtn from '@/components/BBtn.vue'
+import { type Profile, getProfileByUserId } from '@/api/profiles'
 
 const route = useRoute()
 const router = useRouter()
@@ -16,6 +17,7 @@ const postId = ref<string | undefined>(
   Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
 )
 const user = ref<User | null>(null)
+const profile = ref<Profile | null>(null)
 const post = reactive({
   title: '',
   description: '',
@@ -37,6 +39,7 @@ onBeforeMount(async () => {
       router.push('/404')
       return
     }
+    profile.value = await getProfileByUserId(postData.user || '')
 
     Object.assign(post, postData)
   }
@@ -86,7 +89,9 @@ const closeLightbox = () => {
       <!-- <div class="flex justify-center mb-4 absolute top-4 right-4">
         <BBtn v-if="canEditPost" label="Delete Post" />
       </div> -->
-
+      <p class="mb-2 text-center text-zinc-300">
+        Author: <RouterLink :to="`/profile/${profile?.id}`">{{ profile?.username }}</RouterLink>
+      </p>
       <p class="mb-2 text-center text-zinc-500">{{ formatDate(post.updated_at) }}</p>
 
       <div class="flex justify-center mb-4 flex-wrap gap-2">

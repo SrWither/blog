@@ -1,3 +1,4 @@
+import { authenticate } from './auth'
 import { db } from './connect'
 import { getMyUser } from './users'
 
@@ -31,6 +32,41 @@ export const createProfile = async (token: string, data: Profile): Promise<Profi
   } catch (e) {
     console.error(e)
     return null // Return null if profile creation fails
+  }
+}
+
+export const updateProfile = async (
+  token: string,
+  id: string,
+  data: Profile
+): Promise<Profile | null> => {
+  try {
+    const isAuthenticated = await authenticate(token)
+    if (!isAuthenticated) {
+      console.error('You are not authenticated')
+      return null
+    }
+    const [post] = await db.merge<Profile>(id, data)
+
+    return post
+  } catch (e) {
+    console.error(e)
+    return null
+  }
+}
+
+/**
+ * Retrieves a post by ID.
+ * @param id - ID of the post to retrieve.
+ * @returns A promise that resolves to the post object or null if not found.
+ */
+export const getProfile = async (id: string): Promise<Profile | null> => {
+  try {
+    const [post] = await db.select<Profile>(id)
+    return post
+  } catch (e) {
+    console.error(e)
+    return null
   }
 }
 

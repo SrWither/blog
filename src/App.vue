@@ -55,7 +55,7 @@ const toggleDark = () => {
 
 <template>
   <div
-    class="flex flex-col min-h-screen transition-all bg-white dark:bg-zinc-900"
+    class="flex flex-col min-h-screen transition-all bg-white dark:bg-zinc-900 dark"
     :class="{
       dark: isDark
     }"
