@@ -59,11 +59,13 @@ const canEditPost = computed(() => {
 
 const handleLightbox = (imageUrl: string) => {
   lightboxImageUrl.value = imageUrl
+  document.body.classList.add('overflow-hidden')
   showLightbox.value = true
 }
 
 const closeLightbox = () => {
   showLightbox.value = false
+  document.body.classList.remove('overflow-hidden')
   lightboxImageUrl.value = ''
 }
 </script>

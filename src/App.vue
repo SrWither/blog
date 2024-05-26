@@ -5,10 +5,18 @@ import { AuthStore } from '@/stores/auth'
 import { getMyUser, type User } from './api/users'
 import { authenticate } from '@/api/auth'
 import { onBeforeMount, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 
 const authStore = AuthStore()
 const user = ref<User | null>(null)
 const isDark = ref<boolean>(false)
+const router = useRouter()
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+router.beforeEach((_to, _from) => {
+  // Prevent the lightbox left without scroll the body
+  document.body.classList.remove('overflow-hidden')
+})
 
 watch(
   () => authStore.token,
