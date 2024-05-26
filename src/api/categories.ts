@@ -1,13 +1,17 @@
 import { db } from './connect'
-/**
- * Category object.
- */
+
 export type Category = {
   id?: string
   name: string
   description: string
 }
 
+/**
+ * Creates a new category.
+ * @param token - Authentication token for authorization.
+ * @param data - Data object containing category details.
+ * @returns A promise that resolves to the created category or null if authentication fails.
+ */
 export const createCategory = async (token: string, data: Category): Promise<Category | null> => {
   try {
     const isAuthenticated = await db.authenticate(token)
@@ -24,6 +28,13 @@ export const createCategory = async (token: string, data: Category): Promise<Cat
   }
 }
 
+/**
+ * Updates an existing category.
+ * @param token - Authentication token for authorization.
+ * @param id - ID of the category to update.
+ * @param data - Updated data for the category.
+ * @returns A promise that resolves to the updated category or null if authentication fails.
+ */
 export const updateCategory = async (
   token: string,
   id: string,
@@ -44,6 +55,11 @@ export const updateCategory = async (
   }
 }
 
+/**
+ * Retrieves a category by ID.
+ * @param id - ID of the category to retrieve.
+ * @returns A promise that resolves to the category object or null if not found.
+ */
 export const getCategory = async (id: string): Promise<Category | null> => {
   try {
     const [category] = await db.select<Category>(id)
@@ -54,6 +70,10 @@ export const getCategory = async (id: string): Promise<Category | null> => {
   }
 }
 
+/**
+ * Retrieves all categories.
+ * @returns A promise that resolves to an array of categories.
+ */
 export const getCategories = async (): Promise<Category[]> => {
   try {
     const categories = await db.select<Category>('Categories')
@@ -64,6 +84,12 @@ export const getCategories = async (): Promise<Category[]> => {
   }
 }
 
+/**
+ * Deletes a category by ID.
+ * @param token - Authentication token for authorization.
+ * @param id - ID of the category to delete.
+ * @returns A promise that resolves to true if deletion is successful, false otherwise.
+ */
 export const deleteCategory = async (token: string, id: string): Promise<boolean> => {
   try {
     const isAuthenticated = await db.authenticate(token)
