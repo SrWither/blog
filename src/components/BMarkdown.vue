@@ -46,8 +46,8 @@ const renderMarkdown = (markdown: string) => {
 }
 
 const handleClick = (event: MouseEvent) => {
-  event.preventDefault()
   if (event.target instanceof HTMLImageElement) {
+    event.preventDefault()
     emits('clickImage', event.target.src)
   }
 }

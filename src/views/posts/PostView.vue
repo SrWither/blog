@@ -117,7 +117,7 @@ const closeLightbox = () => {
           <img
             :src="lightboxImageUrl"
             alt="lightbox image"
-            class="max-w-full max-h-full rounded-lg"
+            class="object-contain lg:object-scale-down max-w-full max-h-full rounded-lg"
           />
         </div>
       </div>
