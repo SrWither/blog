@@ -11,6 +11,7 @@ const emits = defineEmits(['clickImage'])
 
 const renderedContent = ref<string>('')
 
+// Initialize Marked instance with custom settings for syntax highlighting
 const marked = new Marked(
   markedHighlight({
     langPrefix: 'hljs language-',
@@ -21,7 +22,7 @@ const marked = new Marked(
   })
 )
 
-// youtube videos
+// Custom renderer for handling YouTube video links in markdown
 marked.use({
   renderer: {
     link(href, title, text) {
@@ -41,10 +42,12 @@ marked.use({
   }
 })
 
+// Function to render markdown content using Marked and emoji conversion
 const renderMarkdown = (markdown: string) => {
   return marked.parse(emoji.emojify(markdown))
 }
 
+// Event handler to handle click events on images within rendered content
 const handleClick = (event: MouseEvent) => {
   if (event.target instanceof HTMLImageElement) {
     const parentElement = event.target.parentElement
@@ -56,6 +59,7 @@ const handleClick = (event: MouseEvent) => {
   }
 }
 
+// Watch for changes in props.content and update renderedContent accordingly
 watch(
   () => props.content,
   async (newContent) => {
