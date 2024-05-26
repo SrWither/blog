@@ -36,7 +36,7 @@ marked.use({
         </div>
       `
       }
-      return `<a href="${href}" title="${title}">${text}</a>`
+      return `<a href="${href}" title="${title}" target="_blank">${text}</a>`
     }
   }
 })
@@ -47,8 +47,12 @@ const renderMarkdown = (markdown: string) => {
 
 const handleClick = (event: MouseEvent) => {
   if (event.target instanceof HTMLImageElement) {
-    event.preventDefault()
-    emits('clickImage', event.target.src)
+    const parentElement = event.target.parentElement
+
+    if (!(parentElement instanceof HTMLAnchorElement && parentElement.href)) {
+      event.preventDefault()
+      emits('clickImage', event.target.src)
+    }
   }
 }
 
@@ -66,7 +70,7 @@ watch(
     id="post-content"
     class="dark:text-white"
     v-html="renderedContent"
-    @contextmenu="handleClick"
+    @click="handleClick"
   ></div>
 </template>
 
