@@ -213,13 +213,6 @@ CREATE Categories SET name = "Books and Resources", description = "Recommendatio
 CREATE Categories SET name = "Community Events", description = "Information on upcoming conferences, meetups, hackathons, and other events in the developer community.";
 CREATE Categories SET name = "Code Challenges", description = "Programming challenges and puzzles to test and improve coding skills, along with solutions and explanations.";
 ```
-```hs
-CREATE Users SET 
-    username = "USERNAME",
-    email    = "EMAILf@gmail.com",
-    role     = roles:admin,
-    password = crypto::argon2::generate("123456")
-```
 
 ### Clone repository
 ```sh
