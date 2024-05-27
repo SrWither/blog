@@ -57,6 +57,8 @@
   <img src="https://github.com/SrWither/blog/assets/59105868/ad5f031d-26ca-43b2-8bec-9fc34a8df0f4" alt="image 11">
 </kbd>
 
+https://github.com/SrWither/blog/assets/59105868/d3247846-bf02-4a02-8a11-1bc1d3f9755a
+
 ## Dependencies
 
 - **SurrealDB**: [GitHub - surrealdb/surrealdb](https://github.com/surrealdb/surrealdb/)
