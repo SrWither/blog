@@ -22,24 +22,39 @@
   <img src="https://github.com/SrWither/blog/assets/59105868/fef9b45a-3a73-4f41-adc6-01f19e402731" alt="image 4">
 </kbd>
 
+### OAuth2
+<kbd>
+  <img src="https://github.com/SrWither/blog/assets/59105868/368f9f65-b061-41bb-9096-fda1cd68c0ad" alt="image 5">
+</kbd>
+
 ### Category Details
 <kbd>
-  <img src="https://github.com/SrWither/blog/assets/59105868/db4ff811-8cac-47dc-9ccb-70969209cbca" alt="image 5">
+  <img src="https://github.com/SrWither/blog/assets/59105868/db4ff811-8cac-47dc-9ccb-70969209cbca" alt="image 6">
 </kbd>
 
 ### Post Creation
 <kbd>
-  <img src="https://github.com/SrWither/blog/assets/59105868/bf1c9c89-dd67-4f8d-960a-5cc633548788" alt="image 6">
+  <img src="https://github.com/SrWither/blog/assets/59105868/bf1c9c89-dd67-4f8d-960a-5cc633548788" alt="image 7">
 </kbd>
 
 ### Post View
 <kbd>
-  <img src="https://github.com/SrWither/blog/assets/59105868/7744404e-3ec8-40b6-91a9-4b50fe6f4b50" alt="image 7">
+  <img src="https://github.com/SrWither/blog/assets/59105868/7744404e-3ec8-40b6-91a9-4b50fe6f4b50" alt="image 8">
 </kbd>
 
 ### Lightbox
 <kbd>
-  <img src="https://github.com/SrWither/blog/assets/59105868/052debad-391c-4f0f-88fe-6341dcac238a" alt="image 8">
+  <img src="https://github.com/SrWither/blog/assets/59105868/052debad-391c-4f0f-88fe-6341dcac238a" alt="image 9">
+</kbd>
+
+### Profiles
+<kbd>
+  <img src="https://github.com/SrWither/blog/assets/59105868/e95b710e-f769-4e48-80ec-32969fd5f86b" alt="image 10">
+</kbd>
+
+### Comments
+<kbd>
+  <img src="https://github.com/SrWither/blog/assets/59105868/ad5f031d-26ca-43b2-8bec-9fc34a8df0f4" alt="image 11">
 </kbd>
 
 ## Dependencies
@@ -83,15 +98,35 @@ DEFINE TABLE Categories SCHEMAFULL
         FOR create, update, delete WHERE $auth.role = roles:admin;
 
 DEFINE FIELD name ON TABLE Categories TYPE string;
-DEFINE FIELD description ON TABLE Categories TYPE string;DEFINE TABLE Posts SCHEMALESS
+DEFINE FIELD description ON TABLE Categories TYPE string;
+
+DEFINE SCOPE OAuth2
+    SESSION 3d
+
+    SIGNUP (
+      INSERT INTO Users
+      (email, sub, provider)
+      VALUES
+      ($email, crypto::argon2::generate($sub), $provider)
+    )
+
+    SIGNIN (
+      SELECT * FROM Users WHERE
+      email = $email
+      AND crypto::argon2::compare(sub, $sub)
+    )
+;
+
+DEFINE TABLE Posts SCHEMALESS
     PERMISSIONS
         FOR select
             WHERE published = true
+            OR user = $auth.id
             OR $auth.role = roles:admin
-        FOR create, update
-            WHERE $auth.role = roles:admin
-        FOR delete
-            WHERE $auth.role = roles:admin
+        FOR create, update, delete
+            WHERE 
+            user = $auth.id
+            OR $auth.role = roles:admin
 ;
 
 DEFINE FIELD title ON TABLE Posts TYPE string;
@@ -104,22 +139,45 @@ DEFINE FIELD user ON TABLE Posts TYPE record<Users> DEFAULT $auth.id;
 DEFINE FIELD category ON TABLE Posts TYPE record<Categories>;
 DEFINE FIELD tags ON TABLE Posts TYPE option<array<string>>;
 
+DEFINE TABLE Profiles SCHEMAFULL
+    PERMISSIONS
+        FOR select FULL
+        FOR create, update, delete WHERE user = $auth.id OR $auth.role = roles:admin;
+
+DEFINE FIELD username ON TABLE Profiles TYPE string;
+DEFINE FIELD oauth ON TABLE Profiles TYPE bool DEFAULT false;
+DEFINE FIELD avatar ON TABLE Profiles TYPE string;
+DEFINE FIELD user ON TABLE Profiles TYPE record(Users) DEFAULT $auth.id;
+
+DEFINE INDEX profileUsernameIndex ON TABLE Profiles COLUMNS username UNIQUE;
+
 CREATE roles:admin SET name = "administrator";
 CREATE roles:user SET name = "user";
 
-DEFINE TABLE Users SCHEMAFULL
+DEFINE TABLE Users SCHEMALESS
     PERMISSIONS
-        FOR select FULL
-        FOR update, delete WHERE id = $auth.id OR role = roles:admin;
+        FOR select, update, delete WHERE id = $auth.id OR role = roles:admin;
 
-DEFINE FIELD username ON TABLE Users TYPE string;
 DEFINE FIELD email ON TABLE Users TYPE string
     ASSERT string::is::email($value);
-DEFINE FIELD password ON TABLE Users TYPE string;
+DEFINE FIELD sub ON TABLE Users TYPE option<string>;
+DEFINE FIELD provider ON TABLE Users TYPE option<string>;
+DEFINE FIELD password ON TABLE Users TYPE option<string>;
 DEFINE FIELD role ON TABLE Users TYPE record(roles) DEFAULT roles:user;
 
 DEFINE INDEX userEmailIndex ON TABLE Users COLUMNS email UNIQUE;
-DEFINE INDEX userNameIndex ON TABLE Users COLUMNS username UNIQUE;
+DEFINE INDEX userSubIndex ON TABLE Users COLUMNS sub UNIQUE;
+
+DEFINE TABLE Comments SCHEMAFULL
+    PERMISSIONS
+        FOR select FULL
+        FOR create, update, delete WHERE user = $auth.id OR $auth.role = roles:admin;
+
+DEFINE FIELD user ON TABLE Comments TYPE record<Users> DEFAULT $auth.id;
+DEFINE FIELD post ON TABLE Comments TYPE record<Posts>;
+DEFINE FIELD body ON TABLE Comments TYPE string;
+DEFINE FIELD created_at ON TABLE Comments TYPE datetime DEFAULT time::now();
+DEFINE FIELD updated_at ON TABLE Comments TYPE datetime DEFAULT time::now() VALUE time::now();
 ```
 ```hs
 CREATE Categories SET name = "Tutorials", description = "Step-by-step guides on various programming topics, from beginner to advanced levels.";
@@ -172,7 +230,22 @@ npm install
 ```env
 VITE_SURREALDB="http://0.0.0.0:7435/rpc"
 VITE_IMAGEAPI="http://0.0.0.0:5800/"
+
+# Google
+VITE_CLIENTID=""
+VITE_SECRET=""
+VITE_REDIRECTURI="http://localhost:5173"
+
+
+# Discord
+VITE_DSID=""
+VITE_DSSECRET=""
+VITE_DSURL=""
+VITE_DSREDIRECTURI="http://localhost:5173/callback"
 ```
+To create oauth2 app:
+- **Discord**: [Discord Developer Portal](https://discord.com/developers/applications)
+- **Google**: [Google Console](https://console.cloud.google.com/)
 
 ### Start image api and app
 ```sh
