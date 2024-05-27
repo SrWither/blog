@@ -8,6 +8,8 @@ import BMarkdown from '@/components/BMarkdown.vue'
 import BSimpleCard from '@/components/BSimpleCard.vue'
 import BBtn from '@/components/BBtn.vue'
 import { type Profile, getProfileByUserId } from '@/api/profiles'
+import { type Comment, getCommentsFromPost, createComment } from '@/api/comments'
+import BComment from '@/components/BComment.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -16,6 +18,8 @@ const authStore = AuthStore()
 const postId = ref<string | undefined>(
   Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
 )
+const comment = ref<string>('')
+const comments = ref<Comment[]>([])
 const user = ref<User | null>(null)
 const profile = ref<Profile | null>(null)
 const post = reactive({
@@ -40,6 +44,7 @@ onBeforeMount(async () => {
       return
     }
     profile.value = await getProfileByUserId(postData.user || '')
+    comments.value = await getCommentsFromPost(postId.value)
 
     Object.assign(post, postData)
   }
@@ -70,6 +75,18 @@ const closeLightbox = () => {
   showLightbox.value = false
   document.body.classList.remove('overflow-hidden')
   lightboxImageUrl.value = ''
+}
+
+const handleCreateComment = async () => {
+  const cmt = await createComment(authStore.token || '', {
+    body: comment.value,
+    post: postId.value || ''
+  })
+
+  if (cmt) {
+    comment.value = ''
+    comments.value = await getCommentsFromPost(postId.value || '')
+  }
 }
 </script>
 
@@ -137,6 +154,30 @@ const closeLightbox = () => {
         </div>
       </div>
     </transition>
+
+    <BSimpleCard v-if="user" class="mt-4 mb-2">
+      <form @submit.prevent="handleCreateComment">
+        <!-- Title -->
+        <div class="flex justify-center mb-4">
+          <h1 class="text-gray-800 dark:text-white text-2xl font-bold">Add a comment</h1>
+        </div>
+        <div class="mb-4">
+          <textarea
+            ref="textarea"
+            type="text"
+            name="content"
+            v-model="comment"
+            placeholder="Content"
+            class="w-full rounded-md h-12 md:h-20 lg:h-28 xl:h-40 resize-none border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring focus:ring-purple-500 dark:bg-zinc-700 dark:text-white"
+          />
+        </div>
+        <div class="flex justify-center">
+          <BBtn label="Comment" class="w-full" />
+        </div>
+      </form>
+    </BSimpleCard>
+    <h1 class="text-center font-bold text-3xl my-8">Comments</h1>
+    <BComment class="mt-2" v-for="cmt in comments" :key="cmt.id" :comment="cmt" />
   </div>
 </template>
 
